@@ -20,6 +20,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Import Routes
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+
 // Baseline status route
 app.get('/api', (req, res) => {
   res.status(200).json({
@@ -28,6 +32,10 @@ app.get('/api', (req, res) => {
     timestamp: new Date()
   });
 });
+
+// Mount Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

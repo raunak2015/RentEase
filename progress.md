@@ -53,19 +53,33 @@ This document maintains the persistent state of implemented and remaining tasks 
 
 ---
 
-## Phase 3: Authentication (NOT STARTED)
+## Phase 3: Authentication (COMPLETED ✅)
 
-- [ ] Backend: Create User Mongoose model (`backend/models/User.js`)
-- [ ] Backend: Create auth controller (`backend/controllers/authController.js`) - register, login, profile, forgot-password
-- [ ] Backend: Create auth routes (`backend/routes/authRoutes.js`)
-- [ ] Backend: Create JWT protection middleware (`backend/middleware/authMiddleware.js`)
-- [ ] Frontend: Create API service base (`frontend/services/api.js`) and Auth Service (`frontend/services/authService.js`)
-- [ ] Frontend: Create Auth Context / State with AsyncStorage persistence
-- [ ] Frontend Screens: Splash Screen
-- [ ] Frontend Screens: Onboarding Screen
-- [ ] Frontend Screens: Sign In Screen
-- [ ] Frontend Screens: Sign Up Screen
-- [ ] Frontend Screens: Forgot Password Screen
+- [x] Backend: User Mongoose Model (`backend/models/User.js`) with bcrypt password hashing & verification
+- [x] Backend: JWT token generator utility (`backend/utils/generateToken.js`)
+- [x] Backend: Auth Middleware (`backend/middleware/authMiddleware.js`) with JWT protection & role check (`protect`, `authorize`)
+- [x] Backend: Auth Controller (`backend/controllers/authController.js`) for register, login, profile, forgot-password
+- [x] Backend: Routes (`backend/routes/authRoutes.js`, `backend/routes/userRoutes.js`) mounted in `server.js`
+- [x] Frontend: API Service (`frontend/services/api.js`) with automatic JWT bearer header interceptor
+- [x] Frontend: Auth Service (`frontend/services/authService.js`) handling storage & API requests
+- [x] Frontend: Auth Context (`frontend/src/context/AuthContext.jsx`) with persistent login session via `AsyncStorage`
+- [x] Frontend Screen: Splash Screen (`frontend/src/app/index.jsx`) with auto-routing based on token & onboarding state
+- [x] Frontend Screen: Onboarding Screen (`frontend/src/app/onboarding.jsx`) with multi-page carousel & persistent flag
+- [x] Frontend Screen: Sign In Screen (`frontend/src/app/sign-in.jsx`) with email/password validation & role redirection
+- [x] Frontend Screen: Sign Up Screen (`frontend/src/app/sign-up.jsx`) with Tenant/Owner role selection
+- [x] Frontend Screen: Forgot Password Screen (`frontend/src/app/forgot-password.jsx`) with success messaging
+- [x] Commit: `feat(auth): add backend user model and authentication API` (20da412)
+- [x] Commit: `feat(auth): add auth services, context, and authentication screens` (860e53b)
+- [x] Pushed all commits to `develop` branch on GitHub
+
+---
+
+## Phase 4: Profile (NOT STARTED)
+
+- [ ] Backend: Add user profile photo upload / update support
+- [ ] Frontend: Profile Screen (`frontend/src/app/(tabs)/profile.jsx`) showing photo, name, email, phone, role, bio
+- [ ] Frontend: Edit Profile Screen (`frontend/src/app/edit-profile.jsx`)
+- [ ] Native Integration: Camera & Image Picker (`expo-camera`, `expo-image-picker`) for capturing/selecting profile photo
 
 ---
 
@@ -73,7 +87,7 @@ This document maintains the persistent state of implemented and remaining tasks 
 
 1. **[x] Phase 1: Project Setup** — Git, Express/Mongoose backend, Expo frontend scaffold.
 2. **[x] Phase 2: Design System** — Colors, typography, spacing, reusable UI components.
-3. **[ ] Phase 3: Authentication** — Registration, sign-in, JWT, AsyncStorage, sign-out.
+3. **[x] Phase 3: Authentication** — Registration, sign-in, JWT, AsyncStorage, sign-out.
 4. **[ ] Phase 4: Profile** — Profile editing, camera integration for user photos.
 5. **[ ] Phase 5: Property Management** — Listing, detail screens, creation form, ownership validation.
 6. **[ ] Phase 6: Search & Discovery** — Filter and explore functionality, category layouts.

@@ -103,12 +103,22 @@ This document maintains the persistent state of implemented and remaining tasks 
 
 ---
 
-## Phase 6: Search & Discovery (NOT STARTED)
+## Phase 6: Search & Discovery (COMPLETED ✅)
 
-- [ ] Frontend Screen: Explore Screen (`frontend/src/app/(tabs)/explore.jsx`)
-- [ ] Search & Filtering: Type filter (`Room`, `PG`, `Flat`, `Shared`), Price range filter, Facility filters, Distance filter
-- [ ] Property Sorting: Price low-to-high, high-to-low, newest
-- [ ] Empty Search Results State
+- [x] Frontend Screen: Explore Screen (`frontend/src/app/(tabs)/explore.jsx`) with live search query input
+- [x] Property Type Filter: Filter chips for `All`, `Room`, `PG`, `Flat`, `Shared`
+- [x] Filter Modal: Price Range (Min/Max Rent inputs), Facilities checklist, and Sort selector (Newest, Price Low-High, Price High-Low, Highest Rated)
+- [x] Home Integration (`frontend/src/app/(tabs)/home.jsx`): Category cards grid & search redirection to Explore
+- [x] Commit: `feat(search): add explore search screen, category filters, and home search integration` (193a5c3)
+- [x] Pushed commit to `develop` branch on GitHub
+
+---
+
+## Phase 7: Location & Map (NOT STARTED)
+
+- [ ] Native Integration: Install & configure `expo-location` and `react-native-maps`
+- [ ] Location Utilities (`frontend/utils/location.js`): Request location permissions, fetch GPS coordinates, reverse geocode, Haversine distance calculation
+- [ ] Map View & Coordinates: Display property location on Map view in Property Details & Explore map view
 
 ---
 
@@ -119,7 +129,7 @@ This document maintains the persistent state of implemented and remaining tasks 
 3. **[x] Phase 3: Authentication** — Registration, sign-in, JWT, AsyncStorage, sign-out.
 4. **[x] Phase 4: Profile** — Profile editing, camera integration for user photos.
 5. **[x] Phase 5: Property Management** — Listing, detail screens, creation form, ownership validation.
-6. **[ ] Phase 6: Search & Discovery** — Filter and explore functionality, category layouts.
+6. **[x] Phase 6: Search & Discovery** — Filter and explore functionality, category layouts.
 7. **[ ] Phase 7: Location & Map** — Coordinates, geocoding, distance, maps.
 8. **[ ] Phase 8: Favorites** — Backend persistent bookmarking.
 9. **[ ] Phase 9: Visit Requests** — Scheduling, status updates, notifications.

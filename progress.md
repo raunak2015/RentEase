@@ -114,11 +114,23 @@ This document maintains the persistent state of implemented and remaining tasks 
 
 ---
 
-## Phase 7: Location & Map (NOT STARTED)
+## Phase 7: Location & Map (COMPLETED ✅)
 
-- [ ] Native Integration: Install & configure `expo-location` and `react-native-maps`
-- [ ] Location Utilities (`frontend/utils/location.js`): Request location permissions, fetch GPS coordinates, reverse geocode, Haversine distance calculation
-- [ ] Map View & Coordinates: Display property location on Map view in Property Details & Explore map view
+- [x] Native Integration: Installed `expo-location` and `react-native-maps`
+- [x] Location Utility (`frontend/utils/location.js`): GPS permissions, current position, reverse geocoding, and Haversine distance formula
+- [x] Map Component (`frontend/src/components/ui/MapView.jsx`): Map pin rendering with fallback/web map directions
+- [x] Property Details (`frontend/src/app/property/[id].jsx`): Location & Map card with exact distance badge (e.g. `2.4 km away`)
+- [x] Add Property (`frontend/src/app/add-property.jsx`): "Use My Current Location" button auto-filling GPS coordinates & address
+- [x] Commit: `feat(location): add location service, GPS geocoding, Haversine distance, and MapView integration` (9f03fd8)
+- [x] Pushed commit to `develop` branch on GitHub
+
+---
+
+## Phase 8: Favorites (NOT STARTED)
+
+- [ ] Backend: User model update / Favorite Schema for persistent saved properties (`POST /api/users/favorites/:propertyId`, `DELETE`, `GET`)
+- [ ] Frontend: Favorites Service (`frontend/services/favoriteService.js`)
+- [ ] Frontend Screen: Favorites Screen (`frontend/src/app/(tabs)/favorites.jsx`) displaying bookmarked rental listings with instant removal option
 
 ---
 
@@ -130,7 +142,7 @@ This document maintains the persistent state of implemented and remaining tasks 
 4. **[x] Phase 4: Profile** — Profile editing, camera integration for user photos.
 5. **[x] Phase 5: Property Management** — Listing, detail screens, creation form, ownership validation.
 6. **[x] Phase 6: Search & Discovery** — Filter and explore functionality, category layouts.
-7. **[ ] Phase 7: Location & Map** — Coordinates, geocoding, distance, maps.
+7. **[x] Phase 7: Location & Map** — Coordinates, geocoding, distance, maps.
 8. **[ ] Phase 8: Favorites** — Backend persistent bookmarking.
 9. **[ ] Phase 9: Visit Requests** — Scheduling, status updates, notifications.
 10. **[ ] Phase 10: Contacts & Clipboard** — Sharing listings, clipboard search.

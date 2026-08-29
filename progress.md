@@ -31,27 +31,48 @@ This document maintains the persistent state of implemented and remaining tasks 
 
 ---
 
-## Phase 2: Design System (NOT STARTED)
+## Phase 2: Design System (COMPLETED ✅)
 
-- [ ] Extract colors from Stitch design into `constants/colors.js`
-- [ ] Define typography system in `constants/typography.js`
-- [ ] Define spacing system in `constants/spacing.js`
-- [ ] Create reusable Button component
-- [ ] Create reusable Input component
-- [ ] Create reusable SearchBar component
-- [ ] Create reusable PropertyCard component
-- [ ] Create reusable Avatar component
-- [ ] Create reusable Header component
-- [ ] Create Loader component
-- [ ] Create EmptyState component
-- [ ] Create ErrorState component
+- [x] Extract colors from Stitch design into `constants/colors.js`
+- [x] Define typography system in `constants/typography.js`
+- [x] Define spacing system and shadows in `constants/spacing.js`
+- [x] Create barrel export `constants/index.js`
+- [x] Create reusable Button component (`components/ui/Button.jsx`)
+- [x] Create reusable Input component (`components/ui/Input.jsx`)
+- [x] Create reusable SearchBar component (`components/ui/SearchBar.jsx`)
+- [x] Create reusable PropertyCard component (`components/ui/PropertyCard.jsx`)
+- [x] Create reusable Avatar component (`components/ui/Avatar.jsx`)
+- [x] Create reusable Header component (`components/ui/Header.jsx`)
+- [x] Create reusable Tag/Chip component (`components/ui/Tag.jsx`)
+- [x] Create Loader component (`components/ui/Loader.jsx`)
+- [x] Create EmptyState component (`components/ui/EmptyState.jsx`)
+- [x] Create ErrorState component (`components/ui/ErrorState.jsx`)
+- [x] Create barrel export `components/ui/index.js`
+- [x] Commit: `feat(design-system): add design tokens and reusable UI components` (003259e)
+- [x] Pushed commit to `develop` branch on GitHub
+
+---
+
+## Phase 3: Authentication (NOT STARTED)
+
+- [ ] Backend: Create User Mongoose model (`backend/models/User.js`)
+- [ ] Backend: Create auth controller (`backend/controllers/authController.js`) - register, login, profile, forgot-password
+- [ ] Backend: Create auth routes (`backend/routes/authRoutes.js`)
+- [ ] Backend: Create JWT protection middleware (`backend/middleware/authMiddleware.js`)
+- [ ] Frontend: Create API service base (`frontend/services/api.js`) and Auth Service (`frontend/services/authService.js`)
+- [ ] Frontend: Create Auth Context / State with AsyncStorage persistence
+- [ ] Frontend Screens: Splash Screen
+- [ ] Frontend Screens: Onboarding Screen
+- [ ] Frontend Screens: Sign In Screen
+- [ ] Frontend Screens: Sign Up Screen
+- [ ] Frontend Screens: Forgot Password Screen
 
 ---
 
 ## Overall Development Roadmap
 
 1. **[x] Phase 1: Project Setup** — Git, Express/Mongoose backend, Expo frontend scaffold.
-2. **[ ] Phase 2: Design System** — Colors, typography, spacing, reusable UI components.
+2. **[x] Phase 2: Design System** — Colors, typography, spacing, reusable UI components.
 3. **[ ] Phase 3: Authentication** — Registration, sign-in, JWT, AsyncStorage, sign-out.
 4. **[ ] Phase 4: Profile** — Profile editing, camera integration for user photos.
 5. **[ ] Phase 5: Property Management** — Listing, detail screens, creation form, ownership validation.

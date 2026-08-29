@@ -16,6 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { propertyService } from '@/services/propertyService';
 import { captureCameraPhoto, pickGalleryImage } from '@/utils/camera';
+import { getCurrentUserLocation, reverseGeocodeCoords } from '@/utils/location';
 import Header from '@/components/ui/Header';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -43,11 +44,29 @@ export default function AddPropertyScreen() {
   const [price, setPrice] = useState('');
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+  const [fetchingLocation, setFetchingLocation] = useState(false);
   const [facilities, setFacilities] = useState(['WiFi']);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const handleUseCurrentLocation = async () => {
+    setFetchingLocation(true);
+    const coords = await getCurrentUserLocation();
+    if (coords) {
+      setLatitude(coords.latitude);
+      setLongitude(coords.longitude);
+      const geoAddress = await reverseGeocodeCoords(coords.latitude, coords.longitude);
+      if (geoAddress) {
+        setAddress(geoAddress);
+        setErrors((prev) => ({ ...prev, address: null }));
+      }
+    }
+    setFetchingLocation(false);
+  };
 
   const toggleFacility = (facility) => {
     if (facilities.includes(facility)) {
@@ -103,6 +122,8 @@ export default function AddPropertyScreen() {
         description: description.trim(),
         facilities,
         images,
+        latitude,
+        longitude,
       };
 
       const res = await propertyService.createProperty(payload);
@@ -194,8 +215,21 @@ export default function AddPropertyScreen() {
               }
             />
 
+            <View style={styles.addressLabelRow}>
+              <Text style={styles.inputLabel}>Full Address / Location</Text>
+              <TouchableOpacity
+                style={styles.locationAutoBtn}
+                onPress={handleUseCurrentLocation}
+                disabled={fetchingLocation}
+              >
+                <Ionicons name="navigate-outline" size={14} color={colors.primary} />
+                <Text style={styles.locationAutoText}>
+                  {fetchingLocation ? 'Fetching...' : 'Use My Current Location'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
             <Input
-              label="Full Address / Location"
               placeholder="e.g. Plot 42, Near Tech Park, Gandhinagar"
               value={address}
               onChangeText={(text) => {
@@ -337,6 +371,25 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: spacing.screenPadding,
     paddingVertical: spacing.base,
+  },
+  addressLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: spacing.xs,
+  },
+  inputLabel: {
+    ...typography.labelLg,
+    color: colors.textPrimary,
+  },
+  locationAutoBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  locationAutoText: {
+    ...typography.labelSm,
+    color: colors.primary,
   },
   section: {
     marginBottom: spacing.xl,

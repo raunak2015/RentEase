@@ -12,3 +12,4 @@ export { default as Tag } from './Tag';
 export { default as Loader } from './Loader';
 export { default as EmptyState } from './EmptyState';
 export { default as ErrorState } from './ErrorState';
+export { default as MapView } from './MapView';

@@ -14,11 +14,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { propertyService } from '@/services/propertyService';
 import { useAuth } from '@/context/AuthContext';
+import { calculateHaversineDistance, getCurrentUserLocation } from '@/utils/location';
 import Loader from '@/components/ui/Loader';
 import ErrorState from '@/components/ui/ErrorState';
 import Avatar from '@/components/ui/Avatar';
 import Tag from '@/components/ui/Tag';
 import Button from '@/components/ui/Button';
+import MapView from '@/components/ui/MapView';
 import colors from '@/constants/colors';
 import typography from '@/constants/typography';
 import spacing, { borderRadius, shadows } from '@/constants/spacing';
@@ -35,12 +37,34 @@ export default function PropertyDetailsScreen() {
   const [error, setError] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [userLocation, setUserLocation] = useState(null);
+  const [distanceText, setDistanceText] = useState(null);
 
   useEffect(() => {
     if (id) {
       fetchDetails();
+      fetchUserLocation();
     }
   }, [id]);
+
+  const fetchUserLocation = async () => {
+    const loc = await getCurrentUserLocation();
+    if (loc) {
+      setUserLocation(loc);
+    }
+  };
+
+  useEffect(() => {
+    if (userLocation && property?.latitude && property?.longitude) {
+      const dist = calculateHaversineDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        property.latitude,
+        property.longitude
+      );
+      setDistanceText(dist);
+    }
+  }, [userLocation, property]);
 
   const fetchDetails = async () => {
     setError(null);
@@ -201,6 +225,28 @@ export default function PropertyDetailsScreen() {
             </View>
           </View>
         )}
+
+        {/* Location & Map Section */}
+        <View style={styles.sectionCard}>
+          <View style={styles.locationHeaderRow}>
+            <Text style={styles.sectionTitle}>Location & Map</Text>
+            {distanceText && (
+              <View style={styles.distanceBadge}>
+                <Ionicons name="navigate" size={12} color={colors.primary} />
+                <Text style={styles.distanceBadgeText}>{distanceText}</Text>
+              </View>
+            )}
+          </View>
+          <Text style={styles.mapAddressText}>{property.address}</Text>
+
+          <MapView
+            latitude={property.latitude || 23.0225}
+            longitude={property.longitude || 72.5714}
+            title={property.title}
+            address={property.address}
+            height={200}
+          />
+        </View>
 
         {/* Owner Details Card */}
         <View style={styles.sectionCard}>
@@ -425,6 +471,31 @@ const styles = StyleSheet.create({
     ...typography.bodyLg,
     color: colors.textSecondary,
     lineHeight: 24,
+  },
+  locationHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: spacing.xs,
+  },
+  distanceBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.primaryLight,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    borderRadius: borderRadius.full,
+    gap: 4,
+  },
+  distanceBadgeText: {
+    ...typography.labelSm,
+    color: colors.primary,
+    fontWeight: '700',
+  },
+  mapAddressText: {
+    ...typography.bodyMd,
+    color: colors.textMuted,
+    marginBottom: spacing.md,
   },
   facilityWrap: {
     flexDirection: 'row',

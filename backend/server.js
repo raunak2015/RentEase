@@ -23,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 // Import Routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const propertyRoutes = require('./routes/propertyRoutes');
 
 // Baseline status route
 app.get('/api', (req, res) => {
@@ -36,6 +37,7 @@ app.get('/api', (req, res) => {
 // Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/properties', propertyRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

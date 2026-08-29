@@ -74,12 +74,29 @@ This document maintains the persistent state of implemented and remaining tasks 
 
 ---
 
-## Phase 4: Profile (NOT STARTED)
+## Phase 4: Profile (COMPLETED ✅)
 
-- [ ] Backend: Add user profile photo upload / update support
-- [ ] Frontend: Profile Screen (`frontend/src/app/(tabs)/profile.jsx`) showing photo, name, email, phone, role, bio
-- [ ] Frontend: Edit Profile Screen (`frontend/src/app/edit-profile.jsx`)
-- [ ] Native Integration: Camera & Image Picker (`expo-camera`, `expo-image-picker`) for capturing/selecting profile photo
+- [x] Native Integration: Installed `expo-image-picker` and `expo-camera`
+- [x] Native Utility (`frontend/utils/camera.js`): Camera capture & Gallery picker with permission management
+- [x] Frontend Service (`frontend/services/userService.js`): Profile fetching & updating
+- [x] Frontend Screen: Profile Screen (`frontend/src/app/(tabs)/profile.jsx`) showing Avatar, Name, Email, Phone, Role Badge, Bio & quick menu options
+- [x] Frontend Screen: Edit Profile Screen (`frontend/src/app/edit-profile.jsx`) with Camera/Gallery photo picker modal & profile form
+- [x] Frontend Navigation: Configured `(tabs)/_layout.jsx` bottom tab navigation with role-based tab rendering
+- [x] Commit: `feat(profile): add profile screen, edit profile, and camera integration` (fedab76)
+- [x] Pushed commit to `develop` branch on GitHub
+
+---
+
+## Phase 5: Property Management (NOT STARTED)
+
+- [ ] Backend: Property Mongoose Model (`backend/models/Property.js`) with `ownerId`, `title`, `type`, `price`, `description`, `images`, `facilities`, `address`, `latitude`, `longitude`, `propertyCode`, `rating`, `isActive`
+- [ ] Backend: Property Controller (`backend/controllers/propertyController.js`) - CRUD endpoints with owner authorization validation
+- [ ] Backend: Property Routes (`backend/routes/propertyRoutes.js`) mounted at `/api/properties`
+- [ ] Frontend: Property Service (`frontend/services/propertyService.js`)
+- [ ] Frontend Screen: Owner My Properties (`frontend/src/app/(tabs)/my-properties.jsx`)
+- [ ] Frontend Screen: Add Property Form (`frontend/src/app/add-property.jsx`) with camera photo uploads, facility chips, location input
+- [ ] Frontend Screen: Edit Property Form (`frontend/src/app/edit-property/[id].jsx`)
+- [ ] Frontend Screen: Property Details (`frontend/src/app/property/[id].jsx`) with gallery, details, owner info, visit request CTA
 
 ---
 
@@ -88,7 +105,7 @@ This document maintains the persistent state of implemented and remaining tasks 
 1. **[x] Phase 1: Project Setup** — Git, Express/Mongoose backend, Expo frontend scaffold.
 2. **[x] Phase 2: Design System** — Colors, typography, spacing, reusable UI components.
 3. **[x] Phase 3: Authentication** — Registration, sign-in, JWT, AsyncStorage, sign-out.
-4. **[ ] Phase 4: Profile** — Profile editing, camera integration for user photos.
+4. **[x] Phase 4: Profile** — Profile editing, camera integration for user photos.
 5. **[ ] Phase 5: Property Management** — Listing, detail screens, creation form, ownership validation.
 6. **[ ] Phase 6: Search & Discovery** — Filter and explore functionality, category layouts.
 7. **[ ] Phase 7: Location & Map** — Coordinates, geocoding, distance, maps.

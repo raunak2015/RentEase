@@ -16,6 +16,13 @@ import { propertyService } from '@/services/propertyService';
 import { favoriteService } from '@/services/favoriteService';
 import { useAuth } from '@/context/AuthContext';
 import { calculateHaversineDistance, getCurrentUserLocation } from '@/utils/location';
+import {
+  copyToClipboard,
+  shareProperty,
+  callPhone,
+  sendEmail,
+  openWhatsApp,
+} from '@/utils/contacts';
 import Loader from '@/components/ui/Loader';
 import ErrorState from '@/components/ui/ErrorState';
 import Avatar from '@/components/ui/Avatar';
@@ -118,11 +125,12 @@ export default function PropertyDetailsScreen() {
 
   const handleCopyCode = () => {
     if (property?.propertyCode) {
-      Alert.alert(
-        'Property Code Copied',
-        `Code: ${property.propertyCode}\nYou can paste this code into the search bar to locate this listing instantly.`
-      );
+      copyToClipboard(property.propertyCode, `Property Code "${property.propertyCode}"`);
     }
+  };
+
+  const handleShare = () => {
+    shareProperty(property);
   };
 
   const handleRequestVisit = () => {
@@ -133,14 +141,27 @@ export default function PropertyDetailsScreen() {
   };
 
   const handleContactOwner = () => {
-    if (property?.ownerId?.phone) {
-      Alert.alert(
-        'Contact Property Owner',
-        `Owner: ${property.ownerId.name}\nPhone: ${property.ownerId.phone}\nEmail: ${property.ownerId.email}`
-      );
-    } else {
+    const owner = property?.ownerId || {};
+    if (!owner.phone && !owner.email) {
       Alert.alert('Contact Owner', 'Owner contact details are unavailable.');
+      return;
     }
+
+    const actions = [];
+    if (owner.phone) {
+      actions.push({ text: `📞 Call ${owner.phone}`, onPress: () => callPhone(owner.phone) });
+      actions.push({ text: `💬 WhatsApp`, onPress: () => openWhatsApp(owner.phone, property?.title) });
+    }
+    if (owner.email) {
+      actions.push({ text: `📧 Email ${owner.email}`, onPress: () => sendEmail(owner.email, property?.title) });
+    }
+    actions.push({ text: 'Cancel', style: 'cancel' });
+
+    Alert.alert(
+      `Contact ${owner.name || 'Owner'}`,
+      'Choose how you would like to reach the owner:',
+      actions
+    );
   };
 
   if (loading) {
@@ -178,16 +199,24 @@ export default function PropertyDetailsScreen() {
             <Ionicons name="chevron-back" size={22} color={colors.textPrimary} />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.favoriteOverlayButton}
-            onPress={handleToggleFavorite}
-          >
-            <Ionicons
-              name={isFavorite ? 'heart' : 'heart-outline'}
-              size={22}
-              color={isFavorite ? colors.error : colors.textPrimary}
-            />
-          </TouchableOpacity>
+          <View style={styles.overlayRightBtns}>
+            <TouchableOpacity
+              style={styles.overlayIconBtn}
+              onPress={handleShare}
+            >
+              <Ionicons name="share-social-outline" size={20} color={colors.textPrimary} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.overlayIconBtn}
+              onPress={handleToggleFavorite}
+            >
+              <Ionicons
+                name={isFavorite ? 'heart' : 'heart-outline'}
+                size={20}
+                color={isFavorite ? colors.error : colors.textPrimary}
+              />
+            </TouchableOpacity>
+          </View>
 
           {/* Type Badge */}
           <View style={styles.typeBadge}>
@@ -301,6 +330,44 @@ export default function PropertyDetailsScreen() {
               ) : null}
             </View>
           </View>
+
+          {/* Quick Contact Actions */}
+          <View style={styles.contactActionsRow}>
+            {owner.phone && (
+              <TouchableOpacity
+                style={styles.contactActionBtn}
+                onPress={() => callPhone(owner.phone)}
+              >
+                <Ionicons name="call" size={18} color={colors.success} />
+                <Text style={styles.contactActionText}>Call</Text>
+              </TouchableOpacity>
+            )}
+            {owner.phone && (
+              <TouchableOpacity
+                style={styles.contactActionBtn}
+                onPress={() => openWhatsApp(owner.phone, property.title)}
+              >
+                <Ionicons name="logo-whatsapp" size={18} color={colors.success} />
+                <Text style={styles.contactActionText}>WhatsApp</Text>
+              </TouchableOpacity>
+            )}
+            {owner.email && (
+              <TouchableOpacity
+                style={styles.contactActionBtn}
+                onPress={() => sendEmail(owner.email, property.title)}
+              >
+                <Ionicons name="mail" size={18} color={colors.primary} />
+                <Text style={styles.contactActionText}>Email</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              style={styles.contactActionBtn}
+              onPress={handleShare}
+            >
+              <Ionicons name="share-social" size={18} color={colors.textSecondary} />
+              <Text style={styles.contactActionText}>Share</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
 
@@ -368,10 +435,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...shadows.sm,
   },
-  favoriteOverlayButton: {
+  overlayRightBtns: {
     position: 'absolute',
     top: spacing.md,
     right: spacing.md,
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  overlayIconBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -562,6 +633,31 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     color: colors.textSecondary,
     marginTop: spacing.xxs,
+  },
+  contactActionsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginTop: spacing.md,
+    paddingTop: spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: colors.borderLight,
+  },
+  contactActionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    backgroundColor: colors.surfaceContainerHigh,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.xl,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  contactActionText: {
+    ...typography.labelSm,
+    color: colors.textSecondary,
+    fontWeight: '600',
   },
   stickyFooter: {
     position: 'absolute',

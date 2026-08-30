@@ -13,6 +13,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { propertyService } from '@/services/propertyService';
+import { readFromClipboard } from '@/utils/contacts';
 import SearchBar from '@/components/ui/SearchBar';
 import PropertyCard from '@/components/ui/PropertyCard';
 import Loader from '@/components/ui/Loader';
@@ -153,6 +154,18 @@ export default function ExploreScreen() {
           placeholder="Search by title, location, landmark..."
           onFilterPress={() => setShowFilterModal(true)}
         />
+        <TouchableOpacity
+          style={styles.pasteCodeBtn}
+          onPress={async () => {
+            const text = await readFromClipboard();
+            if (text && text.trim().length > 0) {
+              setSearchQuery(text.trim());
+            }
+          }}
+        >
+          <Ionicons name="clipboard-outline" size={15} color={colors.primary} />
+          <Text style={styles.pasteCodeText}>Paste Property Code</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Category Pills */}
@@ -390,6 +403,20 @@ const styles = StyleSheet.create({
   searchContainer: {
     paddingHorizontal: spacing.screenPadding,
     paddingVertical: spacing.sm,
+  },
+  pasteCodeBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    alignSelf: 'flex-start',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    marginTop: spacing.xs,
+  },
+  pasteCodeText: {
+    ...typography.labelSm,
+    color: colors.primary,
+    textDecorationLine: 'underline',
   },
   categoryStrip: {
     paddingLeft: spacing.screenPadding,

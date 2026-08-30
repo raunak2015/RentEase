@@ -374,6 +374,23 @@ export default function PropertyDetailsScreen() {
       {/* Sticky Bottom Actions */}
       {!isOwner && (
         <View style={styles.stickyFooter}>
+          <TouchableOpacity
+            style={styles.messageIconBtn}
+            onPress={() =>
+              router.push({
+                pathname: '/chat',
+                params: {
+                  propertyId: id,
+                  propertyTitle: property?.title,
+                  otherUserId: owner._id,
+                  otherUserName: owner.name,
+                  otherUserImage: owner.profileImage,
+                },
+              })
+            }
+          >
+            <Ionicons name="chatbubble-ellipses" size={22} color={colors.primary} />
+          </TouchableOpacity>
           <Button
             title="Contact Owner"
             onPress={handleContactOwner}
@@ -678,5 +695,15 @@ const styles = StyleSheet.create({
   },
   visitBtn: {
     flex: 1,
+  },
+  messageIconBtn: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: colors.primary,
   },
 });

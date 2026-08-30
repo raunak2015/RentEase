@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/context/AuthContext';
 import { propertyService } from '@/services/propertyService';
+import { notificationService } from '@/services/notificationService';
 import Avatar from '@/components/ui/Avatar';
 import SearchBar from '@/components/ui/SearchBar';
 import PropertyCard from '@/components/ui/PropertyCard';
@@ -36,10 +37,21 @@ export default function HomeScreen() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     fetchFeaturedProperties();
+    fetchUnreadNotifications();
   }, []);
+
+  const fetchUnreadNotifications = async () => {
+    try {
+      const res = await notificationService.getUnreadCount();
+      setUnreadCount(res.data?.count || 0);
+    } catch (e) {
+      console.log('Error fetching unread notifications:', e);
+    }
+  };
 
   const fetchFeaturedProperties = async () => {
     try {
@@ -56,6 +68,7 @@ export default function HomeScreen() {
   const handleRefresh = () => {
     setRefreshing(true);
     fetchFeaturedProperties();
+    fetchUnreadNotifications();
   };
 
   const handleSearchSubmit = () => {
@@ -89,7 +102,7 @@ export default function HomeScreen() {
       >
         {/* Header Greeting */}
         <View style={styles.header}>
-          <View>
+          <View style={styles.headerTextWrap}>
             <Text style={styles.greeting}>
               Hello, {user?.name?.split(' ')[0] || 'User'} 👋
             </Text>
@@ -100,9 +113,25 @@ export default function HomeScreen() {
             </Text>
           </View>
 
-          <TouchableOpacity onPress={() => router.push('/(tabs)/profile')}>
-            <Avatar source={user?.profileImage} name={user?.name} size={48} />
-          </TouchableOpacity>
+          <View style={styles.headerIconsRow}>
+            <TouchableOpacity
+              style={styles.bellBtn}
+              onPress={() => router.push('/notifications')}
+            >
+              <Ionicons name="notifications-outline" size={22} color={colors.textPrimary} />
+              {unreadCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => router.push('/(tabs)/profile')}>
+              <Avatar source={user?.profileImage} name={user?.name} size={42} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Search Bar */}
@@ -195,6 +224,42 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: spacing.lg,
+  },
+  headerTextWrap: {
+    flex: 1,
+    marginRight: spacing.sm,
+  },
+  headerIconsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  bellBtn: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: colors.surfaceContainerHigh,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  badge: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    backgroundColor: colors.error,
+    borderRadius: 9,
+    minWidth: 18,
+    height: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 3,
+  },
+  badgeText: {
+    ...typography.labelSm,
+    color: colors.white,
+    fontSize: 10,
+    fontWeight: '700',
   },
   greeting: {
     ...typography.display,

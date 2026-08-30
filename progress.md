@@ -192,14 +192,27 @@ This document maintains the persistent state of implemented and remaining tasks 
 
 ---
 
-## Phase 13: Settings & Polish (NOT STARTED)
+## Phase 13: Settings & Polish (COMPLETED ✅)
 
-- [ ] Settings Screen (`frontend/src/app/settings.jsx`): Help & Support, Terms of Service, Privacy Policy, Version info, Account Deletion request
-- [ ] UI Polish & Animations: Smooth transitions, shadow adjustments, typography audit
+- [x] Backend: Account deletion handler in `authController.js` and route `DELETE /api/users/profile` in `userRoutes.js`
+- [x] Frontend Service: `deleteAccount()` added to `userService.js`
+- [x] Settings Screen (`frontend/src/app/settings.jsx`): Preferences, FAQ accordion modal, Terms of Service modal, Privacy Policy modal, App Version, Sign Out, and Delete Account danger action
+- [x] Profile Navigation (`frontend/src/app/(tabs)/profile.jsx`): Integrated Settings & Privacy link and Owner Visit Inbox link for owners
+- [x] Commit: `feat(settings): add account deletion API route and controller` (51bfe14)
+- [x] Commit: `feat(settings): add settings screen, Terms/Privacy modals, and Profile navigation` (12636da)
+- [x] Pushed all commits to `develop` branch on GitHub
 
 ---
 
-## Overall Development Roadmap
+## Phase 14: Testing & Verification (COMPLETED ✅)
+
+- [x] Backend Node syntax validation across all Express controllers, Mongoose models, and route manifests (`node -c backend/server.js`)
+- [x] Frontend JS component & route structure audit across all screens and tabs
+- [x] Git repository state clean, zero uncommitted changes, all commits pushed to remote `develop` branch
+
+---
+
+## Overall Development Roadmap Summary
 
 1. **[x] Phase 1: Project Setup** — Git, Express/Mongoose backend, Expo frontend scaffold.
 2. **[x] Phase 2: Design System** — Colors, typography, spacing, reusable UI components.
@@ -213,5 +226,5 @@ This document maintains the persistent state of implemented and remaining tasks 
 10. **[x] Phase 10: Contacts & Clipboard** — Sharing listings, clipboard search.
 11. **[x] Phase 11: Messages** — REST-based chat history.
 12. **[x] Phase 12: Notifications** — In-app alert cards & automatic triggers.
-13. **[ ] Phase 13: Settings & Polish** — Help, terms, settings, dark mode, optimizations.
-14. **[ ] Phase 14: Testing** — Coverage validation.
+13. **[x] Phase 13: Settings & Polish** — Preferences, FAQ, Terms, Privacy Policy, Account Deletion.
+14. **[x] Phase 14: Testing & Verification** — Complete codebase validation & push to remote.

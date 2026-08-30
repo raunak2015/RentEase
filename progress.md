@@ -139,14 +139,63 @@ This document maintains the persistent state of implemented and remaining tasks 
 
 ---
 
-## Phase 9: Visit Requests (NOT STARTED)
+## Phase 9: Visit Requests (COMPLETED ✅)
 
-- [ ] Backend: Visit Request Mongoose Model (`backend/models/VisitRequest.js`) with `tenantId`, `ownerId`, `propertyId`, `requestedDate`, `requestedTimeSlot`, `status` (`pending`, `accepted`, `rejected`, `cancelled`), `note`
-- [ ] Backend: Visit Request Controller (`backend/controllers/visitController.js`) & Routes (`backend/routes/visitRoutes.js`) mounted at `/api/visits`
-- [ ] Frontend Service (`frontend/services/visitService.js`)
-- [ ] Frontend Screen: Request Visit Modal/Form (`frontend/src/app/request-visit.jsx`)
-- [ ] Frontend Screen: Tenant My Visits (`frontend/src/app/(tabs)/my-visits.jsx`)
-- [ ] Frontend Screen: Owner Visit Requests Inbox (`frontend/src/app/owner-visits.jsx`) with Accept/Reject actions
+- [x] Backend: `VisitRequest` Mongoose Model (`backend/models/VisitRequest.js`)
+- [x] Backend: `visitController.js` & `visitRoutes.js` mounted at `/api/visits`
+- [x] Frontend Service (`frontend/services/visitService.js`)
+- [x] Frontend Screen: Request Visit Wizard (`frontend/src/app/request-visit.jsx`)
+- [x] Frontend Screen: Tenant My Visits (`frontend/src/app/(tabs)/my-visits.jsx`)
+- [x] Frontend Screen: Owner Visit Inbox (`frontend/src/app/owner-visits.jsx`)
+- [x] Commit: `feat(visits): add VisitRequest model, controller, and API routes` (bd79197)
+- [x] Commit: `feat(visits): add visitService, request-visit wizard, tenant my-visits, and owner-visits inbox` (74c3b5e)
+- [x] Pushed all commits to `develop` branch on GitHub
+
+---
+
+## Phase 10: Contacts & Clipboard (COMPLETED ✅)
+
+- [x] Native Integration: Installed `expo-clipboard`, `expo-sharing`, `expo-sms`
+- [x] Native Contacts Utility (`frontend/utils/contacts.js`): `copyToClipboard`, `readFromClipboard`, `shareProperty`, `callPhone`, `sendEmail`, `openWhatsApp`
+- [x] UI Updates: Property code copy, Share sheet overlay button, quick action buttons in owner details card
+- [x] Explore Search Bar: Added "Paste Property Code" button
+- [x] Commit: `feat(contacts): add clipboard copy, native share, call, email, and WhatsApp deep links` (73d4788)
+- [x] Pushed commit to `develop` branch on GitHub
+
+---
+
+## Phase 11: Messages (COMPLETED ✅)
+
+- [x] Backend: `Message` Mongoose Model (`backend/models/Message.js`)
+- [x] Backend: `messageController.js` & `messageRoutes.js` mounted at `/api/messages`
+- [x] Frontend Service (`frontend/services/messageService.js`)
+- [x] Frontend Screen: Chat Screen (`frontend/src/app/chat.jsx`) with optimistic sending & read-receipt ticks
+- [x] Frontend Screen: Messages Inbox (`frontend/src/app/(tabs)/messages.jsx`) with unread dot badge
+- [x] Property Details: Added Message Owner CTA button
+- [x] Commit: `feat(messages): add Message model, controller, and REST API routes` (16c3286)
+- [x] Commit: `feat(messages): add messageService, chat screen, messages inbox, and Message button` (67494da)
+- [x] Pushed all commits to `develop` branch on GitHub
+
+---
+
+## Phase 12: Notifications (COMPLETED ✅)
+
+- [x] Backend: `Notification` Mongoose Model (`backend/models/Notification.js`)
+- [x] Backend: `notificationController.js` & `notificationRoutes.js` mounted at `/api/notifications`
+- [x] Backend Triggers: Programmatic triggers added to `visitController.js` (on visit request create/accept/reject) and `messageController.js` (on new message send)
+- [x] Frontend Service (`frontend/services/notificationService.js`)
+- [x] Frontend Screen: Notifications Screen (`frontend/src/app/notifications.jsx`) with `All`/`Unread` tabs, mark read, delete, type-based icon badges, and deep routing
+- [x] Home Header Integration: Bell icon with live unread badge counter
+- [x] Commit: `feat(notifications): add Notification model, controller, trigger helpers, and API routes` (32af86f)
+- [x] Commit: `feat(notifications): add notificationService, Notifications screen, and Home bell icon badge` (eabdcd6)
+- [x] Pushed all commits to `develop` branch on GitHub
+
+---
+
+## Phase 13: Settings & Polish (NOT STARTED)
+
+- [ ] Settings Screen (`frontend/src/app/settings.jsx`): Help & Support, Terms of Service, Privacy Policy, Version info, Account Deletion request
+- [ ] UI Polish & Animations: Smooth transitions, shadow adjustments, typography audit
 
 ---
 
@@ -160,9 +209,9 @@ This document maintains the persistent state of implemented and remaining tasks 
 6. **[x] Phase 6: Search & Discovery** — Filter and explore functionality, category layouts.
 7. **[x] Phase 7: Location & Map** — Coordinates, geocoding, distance, maps.
 8. **[x] Phase 8: Favorites** — Backend persistent bookmarking.
-9. **[ ] Phase 9: Visit Requests** — Scheduling, status updates, notifications.
-10. **[ ] Phase 10: Contacts & Clipboard** — Sharing listings, clipboard search.
-11. **[ ] Phase 11: Messages** — REST-based chat history.
-12. **[ ] Phase 12: Notifications** — In-app alert cards.
-13. **[ ] Phase 13: Settings & Polish** — Help, terms, dark mode, optimizations.
+9. **[x] Phase 9: Visit Requests** — Scheduling, status updates, notifications.
+10. **[x] Phase 10: Contacts & Clipboard** — Sharing listings, clipboard search.
+11. **[x] Phase 11: Messages** — REST-based chat history.
+12. **[x] Phase 12: Notifications** — In-app alert cards & automatic triggers.
+13. **[ ] Phase 13: Settings & Polish** — Help, terms, settings, dark mode, optimizations.
 14. **[ ] Phase 14: Testing** — Coverage validation.

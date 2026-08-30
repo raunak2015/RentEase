@@ -100,17 +100,31 @@ export default function ProfileScreen() {
           <Text style={styles.sectionTitle}>Account & Activities</Text>
 
           {isOwner ? (
-            <TouchableOpacity
-              style={styles.menuItem}
-              onPress={() => router.push('/(tabs)/my-properties')}
-              activeOpacity={0.7}
-            >
-              <View style={[styles.menuIconBadge, { backgroundColor: colors.primaryLight }]}>
-                <Ionicons name="home-outline" size={20} color={colors.primary} />
-              </View>
-              <Text style={styles.menuItemText}>My Properties</Text>
-              <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
-            </TouchableOpacity>
+            <>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => router.push('/(tabs)/my-properties')}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.menuIconBadge, { backgroundColor: colors.primaryLight }]}>
+                  <Ionicons name="home-outline" size={20} color={colors.primary} />
+                </View>
+                <Text style={styles.menuItemText}>My Properties</Text>
+                <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => router.push('/owner-visits')}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.menuIconBadge, { backgroundColor: colors.secondaryContainer }]}>
+                  <Ionicons name="calendar-outline" size={20} color={colors.secondary} />
+                </View>
+                <Text style={styles.menuItemText}>Owner Visit Inbox</Text>
+                <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+              </TouchableOpacity>
+            </>
           ) : (
             <TouchableOpacity
               style={styles.menuItem}

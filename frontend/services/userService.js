@@ -20,4 +20,9 @@ export const userService = {
     }
     return response;
   },
+
+  // Delete user account
+  async deleteAccount() {
+    return await api.delete('/users/profile');
+  },
 };

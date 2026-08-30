@@ -13,6 +13,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { propertyService } from '@/services/propertyService';
+import { favoriteService } from '@/services/favoriteService';
 import { useAuth } from '@/context/AuthContext';
 import { calculateHaversineDistance, getCurrentUserLocation } from '@/utils/location';
 import Loader from '@/components/ui/Loader';
@@ -30,7 +31,7 @@ const { width } = Dimensions.get('window');
 export default function PropertyDetailsScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
-  const { userRole } = useAuth();
+  const { userRole, isAuthenticated } = useAuth();
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,8 +45,45 @@ export default function PropertyDetailsScreen() {
     if (id) {
       fetchDetails();
       fetchUserLocation();
+      checkFavoriteStatus();
     }
   }, [id]);
+
+  const checkFavoriteStatus = async () => {
+    if (!isAuthenticated) return;
+    try {
+      const res = await favoriteService.getFavorites();
+      const favList = res.data || [];
+      const isFav = favList.some((p) => p._id === id || p === id);
+      setIsFavorite(isFav);
+    } catch (e) {
+      console.log('Error checking favorite status:', e);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!isAuthenticated) {
+      Alert.alert('Sign In Required', 'Please sign in to save favorite properties.', [
+        { text: 'Sign In', onPress: () => router.push('/sign-in') },
+        { text: 'Cancel', style: 'cancel' },
+      ]);
+      return;
+    }
+
+    const previousState = isFavorite;
+    setIsFavorite(!previousState);
+
+    try {
+      if (previousState) {
+        await favoriteService.removeFavorite(id);
+      } else {
+        await favoriteService.addFavorite(id);
+      }
+    } catch (err) {
+      setIsFavorite(previousState);
+      Alert.alert('Error', err.message || 'Failed to update favorites.');
+    }
+  };
 
   const fetchUserLocation = async () => {
     const loc = await getCurrentUserLocation();
@@ -142,7 +180,7 @@ export default function PropertyDetailsScreen() {
 
           <TouchableOpacity
             style={styles.favoriteOverlayButton}
-            onPress={() => setIsFavorite(!isFavorite)}
+            onPress={handleToggleFavorite}
           >
             <Ionicons
               name={isFavorite ? 'heart' : 'heart-outline'}

@@ -164,9 +164,57 @@ const getUnreadCount = async (req, res, next) => {
   }
 };
 
+// In-memory typing status store: key = `${senderId}_${receiverId}_${propertyId}` -> timestamp
+const typingStore = new Map();
+
+// @desc    Update typing status
+// @route   POST /api/messages/typing
+// @access  Private
+const setTypingStatus = async (req, res, next) => {
+  try {
+    const { receiverId, propertyId, isTyping } = req.body;
+    const key = `${req.user._id}_${receiverId}_${propertyId}`;
+
+    if (isTyping) {
+      typingStore.set(key, Date.now() + 4000); // Valid for 4 seconds
+    } else {
+      typingStore.delete(key);
+    }
+
+    res.status(200).json({ status: 'success' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get typing status of other user
+// @route   GET /api/messages/typing-status
+// @access  Private
+const getTypingStatus = async (req, res, next) => {
+  try {
+    const { otherUserId, propertyId } = req.query;
+    const key = `${otherUserId}_${req.user._id}_${propertyId}`;
+    const expiresAt = typingStore.get(key);
+
+    const isTyping = expiresAt && Date.now() < expiresAt;
+    if (!isTyping) {
+      typingStore.delete(key);
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: { isTyping: Boolean(isTyping) },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   sendMessage,
   getConversation,
   getInbox,
   getUnreadCount,
+  setTypingStatus,
+  getTypingStatus,
 };

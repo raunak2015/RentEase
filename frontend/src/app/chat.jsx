@@ -68,13 +68,15 @@ export default function ChatScreen() {
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
+  const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
   const flatListRef = useRef(null);
+  const lastTypingTime = useRef(0);
 
   useEffect(() => {
     if (propertyId && otherUserId) {
       fetchMessages(true);
 
-      // Real-time polling: Fetch new incoming messages every 3 seconds
+      // Real-time polling: Fetch messages and typing status every 3 seconds
       const pollInterval = setInterval(() => {
         pollMessages();
       }, 3000);
@@ -104,9 +106,14 @@ export default function ChatScreen() {
 
   const pollMessages = async () => {
     try {
-      const res = await messageService.getConversation(propertyId, otherUserId);
-      const fetched = res.data || [];
-      // Only update if new message received or status changed
+      const [convRes, typingRes] = await Promise.all([
+        messageService.getConversation(propertyId, otherUserId),
+        messageService.getTypingStatus(otherUserId, propertyId),
+      ]);
+
+      const fetched = convRes.data || [];
+      setIsOtherUserTyping(Boolean(typingRes.data?.isTyping));
+
       setMessages((prev) => {
         if (prev.length !== fetched.length) {
           setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
@@ -119,9 +126,21 @@ export default function ChatScreen() {
     }
   };
 
+  const handleTextChange = (val) => {
+    setText(val);
+    const now = Date.now();
+    if (now - lastTypingTime.current > 2000) {
+      lastTypingTime.current = now;
+      messageService.sendTypingStatus(otherUserId, propertyId, true);
+    }
+  };
+
   const handleSend = async () => {
     const trimmed = text.trim();
     if (!trimmed || sending) return;
+
+    // Clear typing status on send
+    messageService.sendTypingStatus(otherUserId, propertyId, false);
 
     setSending(true);
     const optimistic = {
@@ -167,9 +186,16 @@ export default function ChatScreen() {
 
         <View style={styles.headerTitleWrap}>
           <Text style={styles.headerName}>{otherUserName || 'User'}</Text>
-          <Text style={styles.headerSub} numberOfLines={1}>
-            {propertyTitle || 'Property Chat'}
-          </Text>
+          {isOtherUserTyping ? (
+            <View style={styles.typingRow}>
+              <View style={styles.typingDot} />
+              <Text style={styles.typingText}>typing...</Text>
+            </View>
+          ) : (
+            <Text style={styles.headerSub} numberOfLines={1}>
+              {propertyTitle || 'Property Chat'}
+            </Text>
+          )}
         </View>
       </View>
 
@@ -216,7 +242,7 @@ export default function ChatScreen() {
           <TextInput
             style={styles.input}
             value={text}
-            onChangeText={setText}
+            onChangeText={handleTextChange}
             placeholder="Type a message..."
             placeholderTextColor={colors.textMuted}
             multiline
@@ -278,6 +304,25 @@ const styles = StyleSheet.create({
   headerSub: {
     ...typography.bodyXs,
     color: colors.textMuted,
+  },
+  typingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 1,
+  },
+  typingDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.success,
+  },
+  typingText: {
+    ...typography.labelSm,
+    fontSize: 11,
+    color: colors.success,
+    fontWeight: '600',
+    fontStyle: 'italic',
   },
   contextBanner: {
     flexDirection: 'row',

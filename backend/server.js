@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const propertyRoutes = require('./routes/propertyRoutes');
+const visitRoutes = require('./routes/visitRoutes');
 
 // Baseline status route
 app.get('/api', (req, res) => {
@@ -38,6 +39,7 @@ app.get('/api', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/properties', propertyRoutes);
+app.use('/api/visits', visitRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

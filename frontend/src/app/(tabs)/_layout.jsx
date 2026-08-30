@@ -71,6 +71,17 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
+        name="my-visits"
+        options={{
+          title: 'My Visits',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="calendar-outline" size={size} color={color} />
+          ),
+          href: isOwner ? null : '/my-visits', // Show for tenants only
+        }}
+      />
+
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',

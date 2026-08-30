@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   getUserProfile,
   updateUserProfile,
+  deleteUserAccount,
   getFavorites,
   addFavorite,
   removeFavorite,
@@ -12,7 +13,8 @@ const { protect } = require('../middleware/authMiddleware');
 router
   .route('/profile')
   .get(protect, getUserProfile)
-  .put(protect, updateUserProfile);
+  .put(protect, updateUserProfile)
+  .delete(protect, deleteUserAccount);
 
 router.route('/favorites').get(protect, getFavorites);
 

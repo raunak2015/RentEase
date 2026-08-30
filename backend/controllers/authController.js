@@ -295,6 +295,28 @@ const removeFavorite = async (req, res, next) => {
   }
 };
 
+// @desc    Delete logged-in user account
+// @route   DELETE /api/users/profile
+// @access  Private
+const deleteUserAccount = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndDelete(req.user._id);
+    if (!user) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'User not found',
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'User account permanently deleted',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -304,4 +326,5 @@ module.exports = {
   getFavorites,
   addFavorite,
   removeFavorite,
+  deleteUserAccount,
 };

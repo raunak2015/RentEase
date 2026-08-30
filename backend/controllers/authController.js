@@ -207,10 +207,101 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
+// @desc    Get user favorite properties
+// @route   GET /api/users/favorites
+// @access  Private
+const getFavorites = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id).populate({
+      path: 'favorites',
+      populate: { path: 'ownerId', select: 'name email phone profileImage' },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'User not found',
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      results: user.favorites ? user.favorites.length : 0,
+      data: user.favorites || [],
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Add property to favorites
+// @route   POST /api/users/favorites/:propertyId
+// @access  Private
+const addFavorite = async (req, res, next) => {
+  try {
+    const { propertyId } = req.params;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'User not found',
+      });
+    }
+
+    // Add to favorites if not already present
+    if (!user.favorites.includes(propertyId)) {
+      user.favorites.push(propertyId);
+      await user.save();
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Property added to favorites',
+      data: user.favorites,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Remove property from favorites
+// @route   DELETE /api/users/favorites/:propertyId
+// @access  Private
+const removeFavorite = async (req, res, next) => {
+  try {
+    const { propertyId } = req.params;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'User not found',
+      });
+    }
+
+    user.favorites = user.favorites.filter(
+      (fav) => fav.toString() !== propertyId.toString()
+    );
+    await user.save();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Property removed from favorites',
+      data: user.favorites,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
   updateUserProfile,
   forgotPassword,
+  getFavorites,
+  addFavorite,
+  removeFavorite,
 };

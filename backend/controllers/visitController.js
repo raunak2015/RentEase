@@ -24,7 +24,7 @@ const createVisitRequest = async (req, res, next) => {
       });
     }
 
-    if (property.status !== 'active') {
+    if (!property.isActive) {
       return res.status(400).json({
         status: 'fail',
         message: 'Visit requests cannot be sent for inactive properties',

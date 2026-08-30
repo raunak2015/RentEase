@@ -72,19 +72,50 @@ export default function ChatScreen() {
 
   useEffect(() => {
     if (propertyId && otherUserId) {
-      fetchMessages();
+      fetchMessages(true);
+
+      // Real-time polling: Fetch new incoming messages every 3 seconds
+      const pollInterval = setInterval(() => {
+        pollMessages();
+      }, 3000);
+
+      return () => clearInterval(pollInterval);
     }
   }, [propertyId, otherUserId]);
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (isInitial = false) => {
     try {
       const res = await messageService.getConversation(propertyId, otherUserId);
-      setMessages(res.data || []);
-      setTimeout(() => flatListRef.current?.scrollToEnd({ animated: false }), 100);
+      const fetched = res.data || [];
+      setMessages(fetched);
+      if (isInitial) {
+        setTimeout(() => flatListRef.current?.scrollToEnd({ animated: false }), 100);
+      }
     } catch (err) {
-      Alert.alert('Error', err.message || 'Could not load messages');
+      if (isInitial) {
+        Alert.alert('Error', err.message || 'Could not load messages');
+      }
     } finally {
-      setLoading(false);
+      if (isInitial) {
+        setLoading(false);
+      }
+    }
+  };
+
+  const pollMessages = async () => {
+    try {
+      const res = await messageService.getConversation(propertyId, otherUserId);
+      const fetched = res.data || [];
+      // Only update if new message received or status changed
+      setMessages((prev) => {
+        if (prev.length !== fetched.length) {
+          setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
+          return fetched;
+        }
+        return prev;
+      });
+    } catch (e) {
+      // Silent error during background poll
     }
   };
 
@@ -153,8 +184,8 @@ export default function ChatScreen() {
       {/* Messages */}
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={0}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
       >
         {messages.length === 0 ? (
           <EmptyState

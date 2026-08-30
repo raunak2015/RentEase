@@ -126,11 +126,27 @@ This document maintains the persistent state of implemented and remaining tasks 
 
 ---
 
-## Phase 8: Favorites (NOT STARTED)
+## Phase 8: Favorites (COMPLETED ✅)
 
-- [ ] Backend: User model update / Favorite Schema for persistent saved properties (`POST /api/users/favorites/:propertyId`, `DELETE`, `GET`)
-- [ ] Frontend: Favorites Service (`frontend/services/favoriteService.js`)
-- [ ] Frontend Screen: Favorites Screen (`frontend/src/app/(tabs)/favorites.jsx`) displaying bookmarked rental listings with instant removal option
+- [x] Backend: Added `favorites` array ref in `User` Mongoose schema (`backend/models/User.js`)
+- [x] Backend: Favorites endpoints in `authController.js` & `userRoutes.js` (`GET /api/users/favorites`, `POST /api/users/favorites/:propertyId`, `DELETE /api/users/favorites/:propertyId`)
+- [x] Frontend Service (`frontend/services/favoriteService.js`): Bookmark sync API calls
+- [x] Frontend Screen: Favorites Screen (`frontend/src/app/(tabs)/favorites.jsx`) displaying saved rental listings with pull-to-refresh & instant removal
+- [x] UI Integration: Heart icon toggle in `PropertyDetailsScreen` (`/property/[id]`) with live backend synchronization
+- [x] Commit: `feat(favorites): add favorites schema, controllers, and API routes` (dd6bcef)
+- [x] Commit: `feat(favorites): add favoriteService, favorites screen, and heart toggle sync` (00fdacf)
+- [x] Pushed all commits to `develop` branch on GitHub
+
+---
+
+## Phase 9: Visit Requests (NOT STARTED)
+
+- [ ] Backend: Visit Request Mongoose Model (`backend/models/VisitRequest.js`) with `tenantId`, `ownerId`, `propertyId`, `requestedDate`, `requestedTimeSlot`, `status` (`pending`, `accepted`, `rejected`, `cancelled`), `note`
+- [ ] Backend: Visit Request Controller (`backend/controllers/visitController.js`) & Routes (`backend/routes/visitRoutes.js`) mounted at `/api/visits`
+- [ ] Frontend Service (`frontend/services/visitService.js`)
+- [ ] Frontend Screen: Request Visit Modal/Form (`frontend/src/app/request-visit.jsx`)
+- [ ] Frontend Screen: Tenant My Visits (`frontend/src/app/(tabs)/my-visits.jsx`)
+- [ ] Frontend Screen: Owner Visit Requests Inbox (`frontend/src/app/owner-visits.jsx`) with Accept/Reject actions
 
 ---
 
@@ -143,7 +159,7 @@ This document maintains the persistent state of implemented and remaining tasks 
 5. **[x] Phase 5: Property Management** — Listing, detail screens, creation form, ownership validation.
 6. **[x] Phase 6: Search & Discovery** — Filter and explore functionality, category layouts.
 7. **[x] Phase 7: Location & Map** — Coordinates, geocoding, distance, maps.
-8. **[ ] Phase 8: Favorites** — Backend persistent bookmarking.
+8. **[x] Phase 8: Favorites** — Backend persistent bookmarking.
 9. **[ ] Phase 9: Visit Requests** — Scheduling, status updates, notifications.
 10. **[ ] Phase 10: Contacts & Clipboard** — Sharing listings, clipboard search.
 11. **[ ] Phase 11: Messages** — REST-based chat history.

@@ -25,6 +25,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const propertyRoutes = require('./routes/propertyRoutes');
 const visitRoutes = require('./routes/visitRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 
 // Baseline status route
 app.get('/api', (req, res) => {
@@ -40,6 +41,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/properties', propertyRoutes);
 app.use('/api/visits', visitRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

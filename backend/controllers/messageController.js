@@ -1,5 +1,6 @@
 const Message = require('../models/Message');
 const Property = require('../models/Property');
+const { createNotification } = require('./notificationController');
 
 // @desc    Send a message in a property conversation
 // @route   POST /api/messages
@@ -35,6 +36,16 @@ const sendMessage = async (req, res, next) => {
       { path: 'receiverId', select: 'name profileImage' },
       { path: 'propertyId', select: 'title address images type' },
     ]);
+
+    // Send notification to message receiver
+    await createNotification({
+      userId: receiverId,
+      type: 'new_message',
+      title: `New message from ${req.user.name}`,
+      body: text.length > 60 ? `${text.substring(0, 60)}...` : text,
+      relatedId: message._id,
+      relatedModel: 'Message',
+    });
 
     res.status(201).json({
       status: 'success',

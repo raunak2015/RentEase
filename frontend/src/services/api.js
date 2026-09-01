@@ -2,23 +2,30 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
-// Helper to determine real API URL for mobile devices
+// Dynamic API URL resolver for Expo Go on physical devices
 const getApiUrl = () => {
+  // 1. First priority: Extract live Metro host IP when running in Expo Go
+  const hostUri =
+    Constants.expoConfig?.hostUri ||
+    Constants.manifest2?.extra?.expoGo?.developer?.manifest?.debuggerHost ||
+    Constants.manifest?.debuggerHost ||
+    '';
+
+  if (hostUri) {
+    const ip = hostUri.split(':')[0];
+    if (ip && ip !== 'localhost' && ip !== '127.0.0.1') {
+      return `http://${ip}:5000/api`;
+    }
+  }
+
+  // 2. Second priority: Use environment variable if set to a valid remote/LAN IP
   const envUrl = process.env.EXPO_PUBLIC_API_URL;
   if (envUrl && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1')) {
     return envUrl;
   }
 
-  // Extract host IP from Expo Metro hostUri if running in Expo Go (e.g. "192.168.1.3:8081" -> "192.168.1.3")
-  const hostUri = Constants.expoConfig?.hostUri || Constants.manifest?.debuggerHost || '';
-  if (hostUri) {
-    const ip = hostUri.split(':')[0];
-    if (ip) {
-      return `http://${ip}:5000/api`;
-    }
-  }
-
-  return 'http://192.168.1.3:5000/api';
+  // 3. Fallback to current local network IP
+  return 'http://192.168.1.172:5000/api';
 };
 
 const API_URL = getApiUrl();
